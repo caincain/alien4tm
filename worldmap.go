@@ -233,7 +233,12 @@ func (c coordinates) south() coordinates {
 
 // findWorldCoordinates finds the {x,y}-coordinates of all the listed cities
 // provided they are all connected and that no distinct sets exists
-func findWorldCoordinates(cities map[string]*city) (int, int, int, int, error) { // [][]*city
+// it returns a mapping, as well as min_x, min_y, max_y, max_x
+func findWorldCoordinates(cities map[string]*city) (map[coordinates]*city, int, int, int, int, error) {
+
+	// list by coordinates
+	worldMap := make(map[coordinates]*city, len(cities))
+
 	//
 	alreadyChecked := make(map[string]bool)
 	toCheckList := make([]*city, 1, len(cities))
@@ -257,6 +262,7 @@ func findWorldCoordinates(cities map[string]*city) (int, int, int, int, error) {
 			continue
 		}
 		alreadyChecked[toCheck.name] = true
+		worldMap[toCheck.coordinates] = toCheck
 
 		// check if it's the min/max so far
 		if xx := toCheck.coordinates.x; xx > max_x {
@@ -295,10 +301,24 @@ func findWorldCoordinates(cities map[string]*city) (int, int, int, int, error) {
 
 	// have we checked every city?
 	if len(alreadyChecked) != len(cities) {
-		return 0, 0, 0, 0, errors.New("Cities are not all connected together")
+		return nil, 0, 0, 0, 0, errors.New("Cities are not all connected together")
 	}
 
 	// return max, min
-	return min_x, min_y, max_y, max_x, nil
+	return worldMap, min_x, min_y, max_y, max_x, nil
 
+}
+
+//
+func printMap(worldMap map[coordinates]*city, min_x, min_y, max_y, max_x int) {
+	for yy := max_y; yy >= min_y; yy-- {
+		for xx := min_x; xx <= max_x; xx++ {
+			if val, ok := worldMap[coordinates{xx, yy}]; ok {
+				fmt.Printf("[%s]", val.name[:3])
+			} else {
+				fmt.Printf("[   ]")
+			}
+		}
+		fmt.Println()
+	}
 }

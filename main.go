@@ -26,6 +26,7 @@ func main() {
 	genMap := flag.Int("genMap", 0, "optional argument to generate a world map")
 	slowFlag := flag.Bool("slow", false, "slow the game")
 	fullscreen := flag.Bool("fullscreen", false, "display the game on fullscreen")
+	printMapF := flag.Bool("printMap", false, "print the map contained in the map file")
 
 	if len(os.Args) == 1 {
 		fmt.Println("you need to fill in arguments")
@@ -41,25 +42,6 @@ func main() {
 			panic(err)
 		}
 		defer termbox.Close()
-		const edit_box_width = 30
-		const coldef = termbox.ColorDefault
-		for i := 0; i < 50; i++ {
-			termbox.SetCell(i, 1, ' ', termbox.ColorMagenta, termbox.ColorYellow)
-		}
-		w, h := termbox.Size()
-		midy := h / 2
-		midx := (w - edit_box_width) / 2
-		fmt.Println("lol", w, h)
-
-		termbox.SetCell(midx-1, midy, '│', coldef, coldef)
-		termbox.SetCell(midx+edit_box_width, midy, '│', coldef, coldef)
-		termbox.SetCell(midx-1, midy-1, '┌', coldef, coldef)
-		termbox.SetCell(midx-1, midy+1, '└', coldef, coldef)
-		termbox.SetCell(midx+edit_box_width, midy-1, '┐', coldef, coldef)
-		termbox.SetCell(midx+edit_box_width, midy+1, '┘', coldef, coldef)
-		termbox.Flush()
-		fmt.Scanf("%s")
-		return
 	}
 
 	slow = *slowFlag
@@ -92,8 +74,20 @@ func main() {
 		return
 	}
 
-	// create game + run
+	// create game
 	state := newGame(cities, *numAliens, rng)
+
+	// if we just want the map
+	if *printMapF {
+		coordMap, min_x, min_y, max_y, max_x, err := findWorldCoordinates(state.cities)
+		if err != nil {
+			panic(err)
+		}
+		printMap(coordMap, min_x, min_y, max_y, max_x)
+		return
+	}
+
+	// run the game
 	state.run(10000)
 
 	//
