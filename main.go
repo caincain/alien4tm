@@ -1,97 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"math/rand"
 	"os"
-	"strings"
 	"time"
 
 	randomdata "github.com/Pallinder/go-randomdata"
 )
-
-// parseMap parses the map file given and fills a `cities` map
-func parseMap(filePath string) {
-
-	// attempt to open map file
-	mapFile, err := os.Open(filePath)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Couldn't open file")
-		os.Exit(1)
-	}
-	defer mapFile.Close()
-
-	scanner := bufio.NewScanner(mapFile)
-
-	// read line by line
-	for scanner.Scan() {
-		fields := strings.Fields(scanner.Text()) // [name north=city1 south=cit2]
-		cityName := fields[0]                    // get name
-		numLinks := len(fields[1:])              // get links
-		if numLinks == 0 {
-			fmt.Fprintln(os.Stderr, "One city has no link to other cities")
-			os.Exit(1)
-		}
-		// parse the city's links
-		cityToAdd := city{name: cityName, numLinks: numLinks}
-		for _, direction := range fields[1:] {
-			directionData := strings.Split(direction, "=")
-			if len(directionData) != 2 {
-				fmt.Fprintln(os.Stderr, "Couldn't parse file")
-				os.Exit(1)
-			}
-			switch directionData[0] {
-			case "north":
-				cityToAdd.north = directionData[1]
-			case "west":
-				cityToAdd.west = directionData[1]
-			case "east":
-				cityToAdd.east = directionData[1]
-			case "south":
-				cityToAdd.south = directionData[1]
-			}
-
-		}
-		// add empty alien list
-		cityToAdd.aliens = make([]*alien, 0, 1)
-		// add city to list of cities
-		cities[cityName] = &cityToAdd
-	}
-
-	// check for any errors
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "Couldn't parse file")
-		os.Exit(1)
-	}
-}
-
-// printWorldForFile print the current state of the city
-// following the same formating as the initial map input file
-func printWorldForFile(listCities []*city) {
-	for _, c := range listCities {
-		// ignore destroyed cities
-		if c.destroyed {
-			continue
-		}
-		fmt.Printf("%s ", c.name)
-
-		if c.north != "" {
-			fmt.Printf("north=%s ", c.north)
-		}
-		if c.south != "" {
-			fmt.Printf("south=%s ", c.south)
-		}
-		if c.west != "" {
-			fmt.Printf("west=%s ", c.west)
-		}
-		if c.east != "" {
-			fmt.Printf("east=%s ", c.east)
-		}
-		fmt.Println()
-	}
-}
 
 // generateAliens creates aliens and place them in random cities
 func generateAliens(numAliens int, rng *rand.Rand) {
@@ -221,6 +138,7 @@ func main() {
 	rng := rand.New(randSource)
 
 	// parsing arguments
+	// Note that we assume that the map file is correct!
 	worldMap := flag.String("map", "", "the map file containing the cities")
 	numAliens := flag.Int("aliens", 1, "number of aliens to create")
 	genMap := flag.Int("genMap", 0, "optional argument to generate a world map")
@@ -236,7 +154,7 @@ func main() {
 	// generating a map ?
 	if numCities := *genMap; numCities > 0 {
 		_, resList := generateMap(numCities, rng)
-		printWorldForFile(resList)
+		printWorldForFile(resList, os.Stdout)
 		return
 	}
 
@@ -248,10 +166,13 @@ func main() {
 	}
 
 	// parsing map file into a map[cityName]info
-	cities = make(map[string]*city)
-	parseMap(*worldMap)
-
-	// TODO: check that map is correct and no road leads to nowhere?
+	mapFile, err := os.Open(*worldMap)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Couldn't open file")
+		os.Exit(1)
+	}
+	cities = parseMap(mapFile)
+	mapFile.Close()
 
 	// create list of cities (as a helper)
 	listCities = make([]*city, 0, len(cities))
@@ -279,8 +200,8 @@ func main() {
 	}
 
 	//
-	fmt.Println("Fin.")
+	fmt.Println("Fin. Current state of city:")
 
 	// print out the current world
-	printWorldForFile(listCities)
+	printWorldForFile(listCities, os.Stdout)
 }

@@ -1,0 +1,10 @@
+Newstead14 north=RansomCanyon19 south=Hoonah9 west=Berkhamsted35 east=Bury15 
+Berkhamsted35 north=SanMartin16 south=Campden44 east=Newstead14 
+RansomCanyon19 north=CienegaSprings3 south=Newstead14 west=SanMartin16 east=Berkhamsted16 
+SanMartin16 north=SanMartin43 south=Berkhamsted35 east=RansomCanyon19 
+CienegaSprings3 south=RansomCanyon19 west=SanMartin43 
+Bury15 north=Berkhamsted16 west=Newstead14 
+SanMartin43 south=SanMartin16 east=CienegaSprings3 
+Berkhamsted16 south=Bury15 west=RansomCanyon19 
+Hoonah9 north=Newstead14 west=Campden44 
+Campden44 north=Berkhamsted35 east=Hoonah9 
