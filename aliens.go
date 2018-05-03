@@ -41,3 +41,9 @@ func generateAliens(numAliens int, listCities []*city, rng *rand.Rand) []*alien 
 
 	return aliens
 }
+
+func (a *alien) moveAlien(from, to *city) {
+	from.aliens = from.aliens[:0] // there can only be one alien in a city
+	to.aliens = append(to.aliens, a)
+	a.atCity = to
+}
