@@ -2,6 +2,8 @@
 
 This is a really great description about a simple alien game
 
+![game](https://i.imgur.com/xfnFT0O.png)
+
 ## Setup
 
 You will need to get some random dependencies first. Run alien without parameters to see the usage:
