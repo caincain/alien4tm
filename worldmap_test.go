@@ -33,5 +33,13 @@ func TestMapGenerationAndParsing(t *testing.T) {
 }
 
 func TestGameShouldAlwaysFinish(t *testing.T) {
+	// This test is going to be a tad slow
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	// generate a map
+	mapList, _ := generateMap(10, rng)
 
+	state := newGame(mapList, 3, rng)
+	state.run(10000)
 }
