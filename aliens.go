@@ -7,3 +7,5 @@ type alien struct {
 }
 
 var aliens []*alien
+
+var deadAliens int

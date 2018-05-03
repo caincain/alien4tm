@@ -8,6 +8,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	naming "github.com/Pallinder/sillyname-go"
 )
 
 // parseMap parses the map file given and fills a `cities` map
@@ -33,7 +35,7 @@ func parseMap(filePath string) {
 			os.Exit(1)
 		}
 		// parse the city's links
-		cityToAdd := city{numLinks: numLinks}
+		cityToAdd := city{name: cityName, numLinks: numLinks}
 		for _, direction := range fields[1:] {
 			directionData := strings.Split(direction, "=")
 			if len(directionData) != 2 {
@@ -68,6 +70,9 @@ func parseMap(filePath string) {
 // generateAliens creates aliens and place them in random cities
 func generateAliens(numAliens int, rng *rand.Rand) {
 	for ii := 0; ii < numAliens; ii++ {
+		// give alien a name
+		alienToAdd := alien{name: naming.GenerateStupidName()}
+
 		for {
 			// find random city
 			randCity := rng.Intn(len(listCities))
@@ -76,8 +81,8 @@ func generateAliens(numAliens int, rng *rand.Rand) {
 			if len(atCity.aliens) != 0 {
 				continue
 			}
+			alienToAdd.atCity = atCity
 			// add to list of aliens
-			alienToAdd := alien{atCity: atCity}
 			aliens = append(aliens, &alienToAdd)
 			// add to the city as well
 			atCity.aliens = append(atCity.aliens, &alienToAdd)
@@ -95,6 +100,10 @@ func iteration(rng *rand.Rand) {
 			continue
 		}
 		atCity := currentAlien.atCity
+		// ignore trapped aliens
+		if atCity.numLinks == 0 {
+			continue
+		}
 		// make the alien move
 		whichWayIdx := rng.Intn(atCity.numLinks)
 	Loop:
@@ -146,23 +155,30 @@ func iteration(rng *rand.Rand) {
 		// is there more than one alien on the city? -> fight
 		atCity = currentAlien.atCity
 		if len(atCity.aliens) == 2 {
+			fmt.Printf("alien: %s and %s died in a fight.\n", atCity.aliens[0].name, atCity.aliens[1].name)
 			// aliens kill each other
 			atCity.aliens[0].dead = true
 			atCity.aliens[1].dead = true
+			deadAliens += 2
 			// destroy city
 			atCity.destroyed = true
+			fmt.Printf("city: %s has been destroyed.\n", atCity.name)
 			// destroy roads
 			if atCity.north != "" {
 				cities[atCity.north].south = ""
+				cities[atCity.north].numLinks--
 			}
 			if atCity.west != "" {
 				cities[atCity.west].east = ""
+				cities[atCity.west].numLinks--
 			}
 			if atCity.east != "" {
 				cities[atCity.east].west = ""
+				cities[atCity.east].numLinks--
 			}
 			if atCity.south != "" {
 				cities[atCity.south].north = ""
+				cities[atCity.south].numLinks--
 			}
 		}
 
@@ -193,6 +209,8 @@ func main() {
 	cities = make(map[string]*city)
 	parseMap(*worldMap)
 
+	// TODO: check that map is correct and no road leads to nowhere?
+
 	// create list of cities (as a helper)
 	listCities = make([]*city, 0, len(cities))
 	for _, c := range cities {
@@ -211,5 +229,17 @@ func main() {
 	aliens = make([]*alien, 0, *numAliens)
 	generateAliens(*numAliens, rng)
 
+	// main game loop
+	for i := 0; i < 10000; i++ {
+		fmt.Println("step", i)
+		// test if game has ended
+		if deadAliens == len(aliens) {
+			break
+		}
+		// game iteration
+		iteration(rng)
+	}
+
 	//
+	fmt.Println("Fin.")
 }

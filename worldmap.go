@@ -3,6 +3,8 @@ package main
 // city is the structure to hold such parsed cities:
 // Foo north=Bar west=Baz south=Qu-ux
 type city struct {
+	name string
+
 	north string
 	west  string
 	east  string
