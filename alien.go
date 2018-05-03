@@ -26,9 +26,14 @@ func parseMap(filePath string) {
 	// read line by line
 	for scanner.Scan() {
 		fields := strings.Fields(scanner.Text()) // [name north=city1 south=cit2]
-		cityName := fields[0]
-		// parse direction of a city
-		var cityToAdd city
+		cityName := fields[0]                    // get name
+		numLinks := len(fields[1:])              // get links
+		if numLinks == 0 {
+			fmt.Fprintln(os.Stderr, "One city has no link to other cities")
+			os.Exit(1)
+		}
+		// parse the city's links
+		cityToAdd := city{numLinks: numLinks}
 		for _, direction := range fields[1:] {
 			directionData := strings.Split(direction, "=")
 			if len(directionData) != 2 {
@@ -45,9 +50,10 @@ func parseMap(filePath string) {
 			case "south":
 				cityToAdd.south = directionData[1]
 			}
+
 		}
 		// add city to list of cities
-		cities[cityName] = cityToAdd
+		cities[cityName] = &cityToAdd
 	}
 
 	// check for any errors
@@ -60,7 +66,63 @@ func parseMap(filePath string) {
 func generateAliens(numAliens uint, rng *rand.Rand) {
 	for ii := uint(0); ii < numAliens; ii++ {
 		randCity := rng.Intn(len(listCities))
-		aliens = append(aliens, alien{atCity: listCities[randCity]})
+		// add to list of aliens
+		atCity := listCities[randCity]
+		alienToAdd := alien{atCity: atCity}
+		aliens = append(aliens, &alienToAdd)
+		// add to the city as well
+		atCity.aliens = append(atCity.aliens, &alienToAdd)
+	}
+}
+
+func iteration(rng *rand.Rand) {
+	for ii := 0; ii < len(aliens); ii++ {
+		atCity := aliens[ii].atCity
+		// make the alien move
+		whichWayIdx := rng.Intn(atCity.numLinks)
+		for true {
+			switch whichWayIdx {
+			case 0:
+				// if empty direction, go to the next
+				if goTo := atCity.north; goTo == "" {
+					whichWayIdx = (whichWayIdx + 1) % 4
+				} else {
+					aliens[ii].atCity = cities[goTo]                              // set city of alien
+					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii]) // set cities' alien list
+					break
+				}
+
+			case 1:
+				if goTo := atCity.west; goTo == "" {
+					whichWayIdx = (whichWayIdx + 1) % 4
+				} else {
+					aliens[ii].atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
+					break
+				}
+
+			case 2:
+				if goTo := atCity.east; goTo == "" {
+					whichWayIdx = (whichWayIdx + 1) % 4
+				} else {
+					aliens[ii].atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
+					break
+				}
+
+			case 3:
+				if goTo := atCity.south; goTo == "" {
+					whichWayIdx = (whichWayIdx + 1) % 4
+				} else {
+					aliens[ii].atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
+					break
+				}
+			}
+		} // endfor
+
+		// make the alien fight?
+
 	}
 }
 
@@ -82,13 +144,13 @@ func main() {
 	}
 
 	// parsing map file into a map[cityName]info
-	cities = make(map[string]city)
+	cities = make(map[string]*city)
 	parseMap(*worldMap)
 
 	// create list of cities (as a helper)
-	listCities = make([]string, 0, len(cities))
-	for cityName, _ := range cities {
-		listCities = append(listCities, cityName)
+	listCities = make([]*city, 0, len(cities))
+	for _, c := range cities {
+		listCities = append(listCities, c)
 	}
 
 	// get random source (no need for cryptographic randomness)
@@ -96,7 +158,8 @@ func main() {
 	rng := rand.New(randSource)
 
 	// create aliens
-	aliens = make([]alien, 0, *numAliens)
+	aliens = make([]*alien, 0, *numAliens)
 	generateAliens(*numAliens, rng)
 
+	//
 }

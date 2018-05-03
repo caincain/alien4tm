@@ -2,7 +2,7 @@ package main
 
 type alien struct {
 	name   string
-	atCity string
+	atCity *city
 }
 
-var aliens []alien
+var aliens []*alien
