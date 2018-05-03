@@ -11,3 +11,4 @@ type city struct {
 
 // cities contains all of our cities :)
 var cities map[string]city
+var listCities []string

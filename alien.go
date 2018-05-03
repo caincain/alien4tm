@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 // Parse the map file given
@@ -46,8 +48,6 @@ func parseMap(filePath string) {
 		}
 		// add city to list of cities
 		cities[cityName] = cityToAdd
-		//
-		fmt.Println(cities)
 	}
 
 	// check for any errors
@@ -57,22 +57,46 @@ func parseMap(filePath string) {
 	}
 }
 
+func generateAliens(numAliens uint, rng *rand.Rand) {
+	for ii := uint(0); ii < numAliens; ii++ {
+		randCity := rng.Intn(len(listCities))
+		aliens = append(aliens, alien{atCity: listCities[randCity]})
+	}
+}
+
 func main() {
 
 	// parsing arguments
 	worldMap := flag.String("map", "", "the map file containing the cities")
-	numAliens := flag.Uint("aliens", 0, "number of aliens to create")
+	numAliens := flag.Uint("aliens", 1, "number of aliens to create")
 	if len(os.Args) == 1 {
+		fmt.Println("you need to fill in arguments")
 		flag.Usage()
 		return
 	}
 	flag.Parse()
+	if *numAliens == 0 {
+		fmt.Println("you need more aliens")
+		flag.Usage()
+		return
+	}
 
-	// parsing map file
+	// parsing map file into a map[cityName]info
 	cities = make(map[string]city)
 	parseMap(*worldMap)
 
-	//
-	fmt.Println(*numAliens)
+	// create list of cities (as a helper)
+	listCities = make([]string, 0, len(cities))
+	for cityName, _ := range cities {
+		listCities = append(listCities, cityName)
+	}
+
+	// get random source (no need for cryptographic randomness)
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(randSource)
+
+	// create aliens
+	aliens = make([]alien, 0, *numAliens)
+	generateAliens(*numAliens, rng)
 
 }
