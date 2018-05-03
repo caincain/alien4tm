@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/fatih/color"
 )
+
+var slow bool
 
 type gameState struct {
 	step       int              // stepping into the game
@@ -55,6 +58,9 @@ func (gs *gameState) iteration() {
 	// stepping
 	fmt.Printf("-> turn %d\n", gs.step)
 	gs.step++
+	if slow {
+		time.Sleep(1 * time.Second)
+	}
 
 	for _, currentAlien := range gs.aliens {
 		// ignore dead aliens
@@ -76,6 +82,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.north; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
+					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]                                     // remove alien from city
 					currentAlien.atCity = gs.cities[goTo]                                 // set city of alien
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien) // add alien to city
@@ -86,6 +93,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.west; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
+					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)
@@ -96,6 +104,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.east; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
+					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)
@@ -106,6 +115,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.south; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
+					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)

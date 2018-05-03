@@ -22,6 +22,7 @@ func main() {
 	worldMap := flag.String("map", "", "the map file containing the cities")
 	numAliens := flag.Int("aliens", 1, "number of aliens to create")
 	genMap := flag.Int("genMap", 0, "optional argument to generate a world map")
+	slowFlag := flag.Bool("slow", false, "slow the game")
 
 	if len(os.Args) == 1 {
 		fmt.Println("you need to fill in arguments")
@@ -30,6 +31,8 @@ func main() {
 	}
 
 	flag.Parse()
+
+	slow = *slowFlag
 
 	// just want to generate a map ?
 	if numCities := *genMap; numCities > 0 {
