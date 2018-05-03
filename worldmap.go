@@ -304,9 +304,20 @@ func findWorldCoordinates(cities map[string]*city) (map[coordinates]*city, int, 
 		return nil, 0, 0, 0, 0, errors.New("Cities are not all connected together")
 	}
 
-	// return max, min
-	return worldMap, min_x, min_y, max_y, max_x, nil
+	// reset worldMap coordinates (non-negative coordinates)
+	newWorldMap := make(map[coordinates]*city, len(cities))
+	for _, cityData := range worldMap {
+		if min_x != 0 {
+			cityData.coordinates.x -= min_x
+		}
+		if min_y != 0 {
+			cityData.coordinates.y -= min_y
+		}
+		newWorldMap[cityData.coordinates] = cityData
+	}
 
+	// return max, min
+	return newWorldMap, 0, 0, max_y - min_y, max_x - min_x, nil
 }
 
 //

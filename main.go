@@ -83,7 +83,16 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		printMap(coordMap, min_x, min_y, max_y, max_x)
+		if *fullscreen {
+			printMapGraphic(coordMap, min_x, min_y, max_y, max_x)
+
+		} else {
+			printMap(coordMap, min_x, min_y, max_y, max_x)
+		}
+
+		fmt.Println()
+		fmt.Println("press a key to exit _")
+		fmt.Scanf("%s")
 		return
 	}
 
