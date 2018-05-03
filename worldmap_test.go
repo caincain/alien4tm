@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"math/rand"
 	"testing"
 )
@@ -17,7 +16,6 @@ func init() {
 
 func TestMapGenerationAndParsing(t *testing.T) {
 	for i := 2; i < 50; i++ {
-		fmt.Println(i)
 		// generate a map
 		_, resList := generateMap(i, rng)
 

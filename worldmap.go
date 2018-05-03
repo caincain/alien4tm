@@ -130,9 +130,9 @@ func generateMap(numCities int, rng *rand.Rand) (resMap map[string]*city, resLis
 		var cityToAdd city
 
 		// generate a random name for the city
-		name := strings.Replace(randomdata.City(), " ", "", -1) + strconv.Itoa(rng.Intn(50))
+		name := strings.Replace(randomdata.City(), " ", "", -1) + strconv.Itoa(rng.Intn(5000))
 		for _, ok := resMap[name]; ok; { // make sure it doesn't already exist
-			name = strings.Replace(randomdata.City(), " ", "", -1) + strconv.Itoa(rng.Intn(50))
+			name = strings.Replace(randomdata.City(), " ", "", -1) + strconv.Itoa(rng.Intn(5000))
 		}
 		cityToAdd.name = name
 
