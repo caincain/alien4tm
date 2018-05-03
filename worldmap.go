@@ -5,6 +5,8 @@ package main
 type city struct {
 	name string
 
+	coordinates coordinates
+
 	north string
 	west  string
 	east  string
@@ -14,6 +16,11 @@ type city struct {
 
 	aliens    []*alien
 	destroyed bool
+}
+
+type coordinates struct {
+	x int
+	y int
 }
 
 // cities contains all of our cities :)

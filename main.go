@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	naming "github.com/Pallinder/sillyname-go"
+	randomdata "github.com/Pallinder/go-randomdata"
 )
 
 // parseMap parses the map file given and fills a `cities` map
@@ -69,8 +69,8 @@ func parseMap(filePath string) {
 
 // printWorldForFile print the current state of the city
 // following the same formating as the initial map input file
-func printWorldForFile() {
-	for _, c := range cities {
+func printWorldForFile(listCities []*city) {
+	for _, c := range listCities {
 		// ignore destroyed cities
 		if c.destroyed {
 			continue
@@ -95,9 +95,9 @@ func printWorldForFile() {
 
 // generateAliens creates aliens and place them in random cities
 func generateAliens(numAliens int, rng *rand.Rand) {
-	for ii := 0; ii < numAliens; ii++ {
+	for i := 0; i < numAliens; i++ {
 		// give alien a name
-		alienToAdd := alien{name: naming.GenerateStupidName()}
+		alienToAdd := alien{name: randomdata.SillyName()}
 
 		for {
 			// find random city
@@ -216,15 +216,31 @@ func iteration(rng *rand.Rand) {
 //
 func main() {
 
+	// get random source (no need for cryptographic randomness)
+	randSource := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(randSource)
+
 	// parsing arguments
 	worldMap := flag.String("map", "", "the map file containing the cities")
 	numAliens := flag.Int("aliens", 1, "number of aliens to create")
+	genMap := flag.Int("genMap", 0, "optional argument to generate a world map")
+
 	if len(os.Args) == 1 {
 		fmt.Println("you need to fill in arguments")
 		flag.Usage()
 		return
 	}
+
 	flag.Parse()
+
+	// generating a map ?
+	if numCities := *genMap; numCities > 0 {
+		_, resList := generateMap(numCities, rng)
+		printWorldForFile(resList)
+		return
+	}
+
+	// need at least 1 alien
 	if *numAliens <= 0 {
 		fmt.Println("you need more aliens")
 		flag.Usage()
@@ -242,10 +258,6 @@ func main() {
 	for _, c := range cities {
 		listCities = append(listCities, c)
 	}
-
-	// get random source (no need for cryptographic randomness)
-	randSource := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(randSource)
 
 	// create aliens
 	if *numAliens > len(listCities) {
@@ -270,5 +282,5 @@ func main() {
 	fmt.Println("Fin.")
 
 	// print out the current world
-	printWorldForFile()
+	printWorldForFile(listCities)
 }
