@@ -67,6 +67,32 @@ func parseMap(filePath string) {
 	}
 }
 
+// printWorldForFile print the current state of the city
+// following the same formating as the initial map input file
+func printWorldForFile() {
+	for _, c := range cities {
+		// ignore destroyed cities
+		if c.destroyed {
+			continue
+		}
+		fmt.Printf("%s ", c.name)
+
+		if c.north != "" {
+			fmt.Printf("north=%s ", c.north)
+		}
+		if c.south != "" {
+			fmt.Printf("south=%s ", c.south)
+		}
+		if c.west != "" {
+			fmt.Printf("west=%s ", c.west)
+		}
+		if c.east != "" {
+			fmt.Printf("east=%s ", c.east)
+		}
+		fmt.Println()
+	}
+}
+
 // generateAliens creates aliens and place them in random cities
 func generateAliens(numAliens int, rng *rand.Rand) {
 	for ii := 0; ii < numAliens; ii++ {
@@ -242,4 +268,7 @@ func main() {
 
 	//
 	fmt.Println("Fin.")
+
+	// print out the current world
+	printWorldForFile()
 }
