@@ -1,0 +1,20 @@
+Baldock743 north=Lucien2184 west=Burrton205 east=CienegaSprings1127 
+Lucien2184 north=RansomCanyon1767 south=Baldock743 west=DerbyCenter2891 east=Berkhamsted4790 
+CienegaSprings1127 north=Berkhamsted4790 south=Northleach413 west=Baldock743 east=Hoonah4168 
+Berkhamsted4790 north=Northleach4505 south=CienegaSprings1127 west=Lucien2184 east=Kingsbridge782 
+Kingsbridge782 north=Lucien3089 south=Hoonah4168 west=Berkhamsted4790 
+Northleach413 north=CienegaSprings1127 south=Bury382 
+Northleach4505 south=Berkhamsted4790 west=RansomCanyon1767 east=Lucien3089 
+Lucien3089 north=SanMartin1327 south=Kingsbridge782 west=Northleach4505 east=Burrton4960 
+Bury382 north=Northleach413 east=Plympton3709 
+Burrton4960 north=Bury1811 west=Lucien3089 
+Plympton3709 south=RansomCanyon3393 west=Bury382 
+RansomCanyon1767 south=Lucien2184 west=DerbyCenter3098 east=Northleach4505 
+Bury1811 south=Burrton4960 west=SanMartin1327 
+RansomCanyon3393 north=Plympton3709 
+SanMartin1327 south=Lucien3089 east=Bury1811 
+Hoonah4168 north=Kingsbridge782 west=CienegaSprings1127 
+DerbyCenter2891 north=DerbyCenter3098 south=Burrton205 west=Newstead2921 east=Lucien2184 
+Burrton205 north=DerbyCenter2891 east=Baldock743 
+DerbyCenter3098 south=DerbyCenter2891 east=RansomCanyon1767 
+Newstead2921 east=DerbyCenter2891 

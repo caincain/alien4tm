@@ -1,0 +1,50 @@
+Plympton597 north=Berkhamsted430 south=Berkhamsted18 west=Bury3579 east=Burrton4134 
+Bury3579 north=RansomCanyon2393 south=DerbyCenter3702 west=Kingsbridge4693 east=Plympton597 
+Berkhamsted18 north=Plympton597 south=SkidawayIsland2783 west=DerbyCenter3702 east=Brandwell4834 
+Kingsbridge4693 north=Baldock3827 south=Newstead704 west=Bury1192 east=Bury3579 
+Brandwell4834 north=Burrton4134 south=Newstead2265 west=Berkhamsted18 east=Newstead1859 
+SkidawayIsland2783 north=Berkhamsted18 south=Berkhamsted4033 west=RansomCanyon116 east=Newstead2265 
+Burrton4134 north=Brandwell2421 south=Brandwell4834 west=Plympton597 east=CienegaSprings242 
+CienegaSprings242 north=Kingsbridge3138 south=Newstead1859 west=Burrton4134 east=Lucien2357 
+DerbyCenter3702 north=Bury3579 south=RansomCanyon116 west=Newstead704 east=Berkhamsted18 
+Lucien2357 north=Hoonah4208 west=CienegaSprings242 
+Hoonah4208 south=Lucien2357 west=Kingsbridge3138 east=SanMartin4090 
+Kingsbridge3138 north=Burrton4029 south=CienegaSprings242 west=Brandwell2421 east=Hoonah4208 
+Newstead704 north=Kingsbridge4693 west=BuffaloCity4236 east=DerbyCenter3702 
+BuffaloCity4236 north=Bury1192 south=Hoonah3453 west=SanMartin4057 east=Newstead704 
+Brandwell2421 north=RansomCanyon4345 south=Burrton4134 west=Berkhamsted430 east=Kingsbridge3138 
+Baldock3827 north=Brandwell2789 south=Kingsbridge4693 west=Newstead2671 east=RansomCanyon2393 
+Brandwell2789 north=Bury534 south=Baldock3827 east=Newstead2550 
+RansomCanyon2393 north=Newstead2550 south=Bury3579 west=Baldock3827 east=Berkhamsted430 
+RansomCanyon116 north=DerbyCenter3702 south=NewDeal1553 east=SkidawayIsland2783 
+Berkhamsted430 north=Kingsbridge3843 south=Plympton597 west=RansomCanyon2393 east=Brandwell2421 
+Newstead1859 north=CienegaSprings242 west=Brandwell4834 
+SanMartin4090 north=Plympton1849 west=Hoonah4208 east=NewDeal3648 
+Newstead2550 north=Newstead4227 south=RansomCanyon2393 west=Brandwell2789 east=Kingsbridge3843 
+NewDeal1553 north=RansomCanyon116 east=Berkhamsted4033 
+Newstead4227 north=Plympton54 south=Newstead2550 west=Bury534 east=SanMartin2122 
+Kingsbridge3843 north=SanMartin2122 south=Berkhamsted430 west=Newstead2550 east=RansomCanyon4345 
+SanMartin4057 north=Brandwell2391 south=Berkhamsted93 east=BuffaloCity4236 
+RansomCanyon4345 south=Brandwell2421 west=Kingsbridge3843 east=Burrton4029 
+Newstead2671 south=Bury1192 west=Newstead1780 east=Baldock3827 
+Berkhamsted93 north=SanMartin4057 east=Hoonah3453 
+Hoonah3453 north=BuffaloCity4236 south=Bury2371 west=Berkhamsted93 
+NewDeal3648 west=SanMartin4090 east=Berkhamsted1412 
+Brandwell2391 north=Newstead1780 south=SanMartin4057 east=Bury1192 
+Newstead2265 north=Brandwell4834 south=BuffaloCity1551 west=SkidawayIsland2783 
+Burrton4029 south=Kingsbridge3138 west=RansomCanyon4345 
+Bury534 north=Newstead4771 south=Brandwell2789 west=NewDeal1295 east=Newstead4227 
+Berkhamsted1412 south=RansomCanyon4622 west=NewDeal3648 east=SkidawayIsland193 
+Bury1192 north=Newstead2671 south=BuffaloCity4236 west=Brandwell2391 east=Kingsbridge4693 
+NewDeal1295 north=RansomCanyon1693 east=Bury534 
+Berkhamsted4033 north=SkidawayIsland2783 west=NewDeal1553 east=BuffaloCity1551 
+SanMartin2122 south=Kingsbridge3843 west=Newstead4227 
+Newstead1780 south=Brandwell2391 east=Newstead2671 
+Plympton1849 south=SanMartin4090 
+Newstead4771 south=Bury534 west=RansomCanyon1693 east=Plympton54 
+RansomCanyon4622 north=Berkhamsted1412 
+BuffaloCity1551 north=Newstead2265 west=Berkhamsted4033 
+Plympton54 south=Newstead4227 west=Newstead4771 
+RansomCanyon1693 south=NewDeal1295 east=Newstead4771 
+Bury2371 north=Hoonah3453 
+SkidawayIsland193 west=Berkhamsted1412 
