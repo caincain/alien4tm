@@ -12,3 +12,9 @@ go get github.com/fatih/color
 go build
 ./alien4tm
 ```
+
+Example usage:
+
+```
+./alien4tm go build && ./alien4tm -map mapSamples/map10.txt -aliens 4 -slow
+```
