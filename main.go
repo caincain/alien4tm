@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Parse the map file given
+// parseMap parses the map file given and fills a `cities` map
 func parseMap(filePath string) {
 
 	// attempt to open map file
@@ -52,6 +52,8 @@ func parseMap(filePath string) {
 			}
 
 		}
+		// add empty alien list
+		cityToAdd.aliens = make([]*alien, 0, 1)
 		// add city to list of cities
 		cities[cityName] = &cityToAdd
 	}
@@ -63,81 +65,104 @@ func parseMap(filePath string) {
 	}
 }
 
-func generateAliens(numAliens uint, rng *rand.Rand) {
-	for ii := uint(0); ii < numAliens; ii++ {
-		randCity := rng.Intn(len(listCities))
-		// add to list of aliens
-		atCity := listCities[randCity]
-		alienToAdd := alien{atCity: atCity}
-		aliens = append(aliens, &alienToAdd)
-		// add to the city as well
-		atCity.aliens = append(atCity.aliens, &alienToAdd)
+// generateAliens creates aliens and place them in random cities
+func generateAliens(numAliens int, rng *rand.Rand) {
+	for ii := 0; ii < numAliens; ii++ {
+		for {
+			// find random city
+			randCity := rng.Intn(len(listCities))
+			atCity := listCities[randCity]
+			// check if city has no alien
+			if len(atCity.aliens) != 0 {
+				continue
+			}
+			// add to list of aliens
+			alienToAdd := alien{atCity: atCity}
+			aliens = append(aliens, &alienToAdd)
+			// add to the city as well
+			atCity.aliens = append(atCity.aliens, &alienToAdd)
+			//
+			break
+		}
 	}
 }
 
+// iteration goes through one iteration of the game
 func iteration(rng *rand.Rand) {
-	for ii := 0; ii < len(aliens); ii++ {
-		atCity := aliens[ii].atCity
+	for _, currentAlien := range aliens {
+		atCity := currentAlien.atCity
 		// make the alien move
 		whichWayIdx := rng.Intn(atCity.numLinks)
-		for true {
+	Loop:
+		for {
 			switch whichWayIdx {
 			case 0:
 				// if empty direction, go to the next
 				if goTo := atCity.north; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					aliens[ii].atCity = cities[goTo]                              // set city of alien
-					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii]) // set cities' alien list
-					break
+					atCity.aliens = atCity.aliens[:0]                               // remove alien from city
+					currentAlien.atCity = cities[goTo]                              // set city of alien
+					cities[goTo].aliens = append(cities[goTo].aliens, currentAlien) // add alien to city
+					break Loop
 				}
 
 			case 1:
 				if goTo := atCity.west; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					aliens[ii].atCity = cities[goTo]
-					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
-					break
+					atCity.aliens = atCity.aliens[:0]
+					currentAlien.atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, currentAlien)
+					break Loop
 				}
 
 			case 2:
 				if goTo := atCity.east; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					aliens[ii].atCity = cities[goTo]
-					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
-					break
+					atCity.aliens = atCity.aliens[:0]
+					currentAlien.atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, currentAlien)
+					break Loop
 				}
 
 			case 3:
 				if goTo := atCity.south; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					aliens[ii].atCity = cities[goTo]
-					cities[goTo].aliens = append(cities[goTo].aliens, aliens[ii])
-					break
+					atCity.aliens = atCity.aliens[:0]
+					currentAlien.atCity = cities[goTo]
+					cities[goTo].aliens = append(cities[goTo].aliens, currentAlien)
+					break Loop
 				}
 			}
 		} // endfor
 
-		// make the alien fight?
+		// is there more than one alien on the city?
+		atCity = currentAlien.atCity
+		if len(atCity.aliens) == 2 {
 
-	}
+		}
+
+	} // end for aliens
 }
 
+//
+// MAIN
+//
 func main() {
 
 	// parsing arguments
 	worldMap := flag.String("map", "", "the map file containing the cities")
-	numAliens := flag.Uint("aliens", 1, "number of aliens to create")
+	numAliens := flag.Int("aliens", 1, "number of aliens to create")
 	if len(os.Args) == 1 {
 		fmt.Println("you need to fill in arguments")
 		flag.Usage()
 		return
 	}
 	flag.Parse()
-	if *numAliens == 0 {
+	if *numAliens <= 0 {
 		fmt.Println("you need more aliens")
 		flag.Usage()
 		return
@@ -158,6 +183,10 @@ func main() {
 	rng := rand.New(randSource)
 
 	// create aliens
+	if *numAliens > len(listCities) {
+		fmt.Println("you can't have more than one aliens per city")
+		return
+	}
 	aliens = make([]*alien, 0, *numAliens)
 	generateAliens(*numAliens, rng)
 
