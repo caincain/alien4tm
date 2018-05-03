@@ -52,3 +52,29 @@ func TestStuck(t *testing.T) {
 		t.Fatalf("Alien has moved when it shouldn't have")
 	}
 }
+
+func TestTwoAliens(t *testing.T) {
+	// 2 cities with A <-> B
+	cityA := &city{name: "A", north: "B", numLinks: 1}
+	cityB := &city{name: "B", south: "A", numLinks: 1}
+	cities := map[string]*city{"A": cityA, "B": cityB}
+	listCities := []*city{cityA, cityB}
+	// aliens in both A and B
+	alien1 := &alien{name: "1", atCity: cityA}
+	alien2 := &alien{name: "2", atCity: cityB}
+	cityA.aliens = []*alien{alien1}
+	cityB.aliens = []*alien{alien2}
+	aliens := []*alien{alien1, alien2}
+	// create state
+	state := gameState{cities: cities, listCities: listCities, aliens: aliens, rng: rng}
+	state.run(1)
+
+	allGood := true
+	allGood = allGood || cityA.destroyed
+	allGood = allGood || cityB.destroyed
+	allGood = allGood || state.deadAliens == 2
+
+	if !allGood {
+		t.Fatalf("simple state has failed")
+	}
+}
