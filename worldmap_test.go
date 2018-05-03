@@ -30,3 +30,15 @@ func TestMapGenerationAndParsing(t *testing.T) {
 		}
 	}
 }
+
+func TestFindWorldCoordinates(t *testing.T) {
+
+	// generate a map
+	resMap, _ := generateMap(20, rng)
+	_, _, _, _, err := findWorldCoordinates(resMap)
+
+	if err != nil {
+		t.Fatalf("finding coordinates didn't work")
+	}
+
+}

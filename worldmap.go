@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -205,4 +206,99 @@ func generateMap(numCities int, rng *rand.Rand) (resMap map[string]*city, resLis
 	}
 
 	return resMap, resList
+}
+
+// north, west, east, and south are all helper functions
+// to quickly calculate a neighbour's coordinates
+func (c coordinates) north() coordinates {
+	res := c
+	res.y++
+	return res
+}
+func (c coordinates) west() coordinates {
+	res := c
+	res.x--
+	return res
+}
+func (c coordinates) east() coordinates {
+	res := c
+	res.x++
+	return res
+}
+func (c coordinates) south() coordinates {
+	res := c
+	res.y--
+	return res
+}
+
+// findWorldCoordinates finds the {x,y}-coordinates of all the listed cities
+// provided they are all connected and that no distinct sets exists
+func findWorldCoordinates(cities map[string]*city) (int, int, int, int, error) { // [][]*city
+	//
+	alreadyChecked := make(map[string]bool)
+	toCheckList := make([]*city, 1, len(cities))
+
+	var min_x, min_y, max_x, max_y int
+
+	// obtain the first city
+	for _, cityData := range cities {
+		toCheckList[0] = cityData
+		break
+	}
+
+	// loop til no more cities to check
+	for len(alreadyChecked) != len(cities) || len(toCheckList) == 0 {
+		// get element to check + update checklist
+		toCheck := toCheckList[0]
+		toCheckList = toCheckList[1:]
+
+		// first city is {x:0,y:0}
+		if alreadyChecked[toCheck.name] {
+			continue
+		}
+		alreadyChecked[toCheck.name] = true
+
+		// check if it's the min/max so far
+		if xx := toCheck.coordinates.x; xx > max_x {
+			max_x = xx
+		} else if xx < min_x {
+			min_x = xx
+		}
+		if yy := toCheck.coordinates.y; yy > max_y {
+			max_y = yy
+		} else if yy < min_y {
+			min_y = yy
+		}
+
+		// set neighbours coordinates and explore them
+		if toCheck.north != "" {
+			northNeighbour := cities[toCheck.north]
+			northNeighbour.coordinates = toCheck.coordinates.north()
+			toCheckList = append(toCheckList, northNeighbour)
+		}
+		if toCheck.west != "" {
+			westNeighbour := cities[toCheck.west]
+			westNeighbour.coordinates = toCheck.coordinates.west()
+			toCheckList = append(toCheckList, westNeighbour)
+		}
+		if toCheck.east != "" {
+			eastNeighbour := cities[toCheck.east]
+			eastNeighbour.coordinates = toCheck.coordinates.east()
+			toCheckList = append(toCheckList, eastNeighbour)
+		}
+		if toCheck.south != "" {
+			southNeighbour := cities[toCheck.south]
+			southNeighbour.coordinates = toCheck.coordinates.south()
+			toCheckList = append(toCheckList, southNeighbour)
+		}
+	}
+
+	// have we checked every city?
+	if len(alreadyChecked) != len(cities) {
+		return 0, 0, 0, 0, errors.New("Cities are not all connected together")
+	}
+
+	// return max, min
+	return min_x, min_y, max_y, max_x, nil
+
 }
