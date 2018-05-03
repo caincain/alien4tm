@@ -90,6 +90,10 @@ func generateAliens(numAliens int, rng *rand.Rand) {
 // iteration goes through one iteration of the game
 func iteration(rng *rand.Rand) {
 	for _, currentAlien := range aliens {
+		// ignore dead aliens
+		if currentAlien.dead {
+			continue
+		}
 		atCity := currentAlien.atCity
 		// make the alien move
 		whichWayIdx := rng.Intn(atCity.numLinks)
@@ -139,10 +143,27 @@ func iteration(rng *rand.Rand) {
 			}
 		} // endfor
 
-		// is there more than one alien on the city?
+		// is there more than one alien on the city? -> fight
 		atCity = currentAlien.atCity
 		if len(atCity.aliens) == 2 {
-
+			// aliens kill each other
+			atCity.aliens[0].dead = true
+			atCity.aliens[1].dead = true
+			// destroy city
+			atCity.destroyed = true
+			// destroy roads
+			if atCity.north != "" {
+				cities[atCity.north].south = ""
+			}
+			if atCity.west != "" {
+				cities[atCity.west].east = ""
+			}
+			if atCity.east != "" {
+				cities[atCity.east].west = ""
+			}
+			if atCity.south != "" {
+				cities[atCity.south].north = ""
+			}
 		}
 
 	} // end for aliens
