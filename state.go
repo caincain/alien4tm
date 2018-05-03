@@ -82,7 +82,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.north; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
+					color.Blue(" 👽 %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]                                     // remove alien from city
 					currentAlien.atCity = gs.cities[goTo]                                 // set city of alien
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien) // add alien to city
@@ -93,7 +93,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.west; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
+					color.Blue(" 👽 %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)
@@ -104,7 +104,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.east; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
+					color.Blue(" 👽 %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)
@@ -115,7 +115,7 @@ func (gs *gameState) iteration() {
 				if goTo := atCity.south; goTo == "" {
 					whichWayIdx = (whichWayIdx + 1) % 4
 				} else {
-					color.Blue(" alien %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
+					color.Blue(" 👽 %s moved from %s to %s", currentAlien.name, atCity.name, goTo)
 					atCity.aliens = atCity.aliens[:0]
 					currentAlien.atCity = gs.cities[goTo]
 					gs.cities[goTo].aliens = append(gs.cities[goTo].aliens, currentAlien)
@@ -127,14 +127,14 @@ func (gs *gameState) iteration() {
 		// is there more than one alien on the city? -> fight
 		atCity = currentAlien.atCity
 		if len(atCity.aliens) == 2 {
-			color.Red(" alien: %s and %s died in a fight.\n", atCity.aliens[0].name, atCity.aliens[1].name)
+			color.Red(" 👊 %s and %s died in a fight.\n", atCity.aliens[0].name, atCity.aliens[1].name)
 			// aliens kill each other
 			atCity.aliens[0].dead = true
 			atCity.aliens[1].dead = true
 			gs.deadAliens += 2
 			// destroy city
 			atCity.destroyed = true
-			color.Magenta(" city: %s has been destroyed.\n", atCity.name)
+			color.Magenta(" 🌆 %s has been destroyed.\n", atCity.name)
 			// destroy roads
 			if atCity.north != "" {
 				gs.cities[atCity.north].south = ""
