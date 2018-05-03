@@ -33,3 +33,7 @@ func TestMapGenerationAndParsing(t *testing.T) {
 		}
 	}
 }
+
+func TestGameShouldAlwaysFinish(t *testing.T) {
+
+}

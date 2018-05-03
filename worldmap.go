@@ -36,10 +36,6 @@ type coordinates struct {
 	y int
 }
 
-// cities contains all of our cities :)
-var cities map[string]*city
-var listCities []*city
-
 // parseMap parses the map file given and fills a `cities` map
 func parseMap(mapFile io.Reader) map[string]*city {
 
