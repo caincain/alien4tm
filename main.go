@@ -88,10 +88,10 @@ func main() {
 
 		} else {
 			printMap(coordMap, min_x, min_y, max_y, max_x)
+			fmt.Println()
+			fmt.Println("press a key to exit _")
 		}
 
-		fmt.Println()
-		fmt.Println("press a key to exit _")
 		fmt.Scanf("%s")
 		return
 	}
@@ -101,8 +101,8 @@ func main() {
 
 	//
 	fmt.Println()
-	fmt.Println("----------- Fin. ------------")
-	fmt.Println("----Current state of city----")
+	fmt.Println("----------- Fin. ---------------")
+	fmt.Println("----Current state of the map----")
 	fmt.Println()
 
 	// print out the current world

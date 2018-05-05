@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"time"
 
 	termbox "github.com/nsf/termbox-go"
 )
@@ -17,32 +17,30 @@ func fill(x, y, w, h int, cell termbox.Cell) {
 
 // printMapGraphic prints a world map graphically
 func printMapGraphic(worldMap map[coordinates]*city, min_x, min_y, max_y, max_x int) {
-	// figure out what the screensize is:
+	// figure out what info about terminal
 	w, h := termbox.Size()
-	const coldef = termbox.ColorDefault
+	margin := 10 * h / 100 // margin: 10% of width
 
-	for i := 6; i < w-6; i++ {
-		for j := 6; j < h-6; j++ {
-			termbox.SetCell(i, j, ' ', termbox.ColorYellow, termbox.ColorYellow)
-		}
-	}
+	// we want the cursor
 	termbox.SetCursor(1, 1)
+
 	//
+	wCell := (w/2 - 2*margin) / max_x
+	hCell := (h/2 - 2*margin) / max_y
+
+	// set cities or non-cities
 	for yy := max_y; yy >= min_y; yy-- {
 		for xx := min_x; xx <= max_x; xx++ {
 			if _, ok := worldMap[coordinates{xx, yy}]; ok {
-				termbox.SetCell(8+xx, 8+yy, '[', termbox.ColorBlue, termbox.ColorWhite)
-				termbox.SetCell(8+xx+1, 8+yy, ' ', termbox.ColorBlue, termbox.ColorWhite)
-				termbox.SetCell(8+xx+2, 8+yy, ' ', termbox.ColorBlue, termbox.ColorWhite)
-				termbox.SetCell(8+xx+3, 8+yy, ' ', termbox.ColorBlue, termbox.ColorWhite)
-				termbox.SetCell(8+xx+4, 8+yy, ']', termbox.ColorBlue, termbox.ColorWhite)
+				// func fill(x, y, w, h int, cell termbox.Cell) {
+				fill(margin+(xx*wCell), margin+(yy*hCell), wCell, hCell, termbox.Cell{Ch: 'X', Bg: termbox.ColorYellow})
 			} else {
-
+				fill(margin+(xx*wCell), margin+(yy*hCell), wCell, hCell, termbox.Cell{Bg: termbox.ColorBlue})
 			}
+			termbox.Flush()
+			time.Sleep(50 * time.Millisecond)
 		}
-		fmt.Println()
 	}
 
 	termbox.Flush()
-	return
 }
